@@ -4,9 +4,19 @@ from sys import version_info
 
 def advimport(main_module, *other_modules, name=None, pipfix=False, log=False):
 
-    def pipfix_f(module=main_module):
+# Function to install missing modules using pip[pyversion being used]
+
+    def pipfix_f(module=main_module, askconfirm=True):
         print("Trying to install", module, "using pip" + str(version_info[0]))
+        if askconfirm:
+            if input("Proceed? y/n: ") == "y":
+                pass
+            else:
+                print("Aborted")
+                return 1
         shell("pip" + str(version_info[0]) + " install --user " + module)
+
+# Import submodules from main_module, with name assignments
 
     if len(other_modules) >= 1:
         if name is not None:
@@ -31,7 +41,13 @@ def advimport(main_module, *other_modules, name=None, pipfix=False, log=False):
                 print("AdvancedImportError:",re.search(r"named (?P<missing_module>\'\w+\')", ERROR.args[0]).group("missing_module"),\
                 "does not exists or it is not installed")
                 if pipfix:
-                    pipfix_f()
+                    if type(pipfix) is tuple and len(pipfix) is 2:
+                        pipfix_f(askconfirm=pipfix[1])
+                    else:
+                        pipfix_f()
+
+# Import just main_module
+
     elif len(other_modules) is 0:
         try:
             exec("import "+ main_module + (" as " + name if name is not None else ""))
@@ -39,4 +55,9 @@ def advimport(main_module, *other_modules, name=None, pipfix=False, log=False):
             print("AdvancedImportError:",re.search(r"named (?P<missing_module>\'\w+\')", ERROR.args[0]).group("missing_module"),\
             "does not exists or it is not installed")
             if pipfix:
-                pipfix_f()
+                if type(pipfix) is tuple and len(pipfix) is 2:
+                    pipfix_f(askconfirm=pipfix[1])
+                else:
+                    pipfix_f()
+    else:
+        raise ValueError("Invalid syntax")
