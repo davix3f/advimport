@@ -10,4 +10,4 @@ Check the [main README](../master/README.md) to know more
 
 I said, check the [main README](../master/README.md) to know more
 
-** This README will self destruct in 3,2,1,0.5...**
+**This README will self destruct in 3,2,1,0.5...**
