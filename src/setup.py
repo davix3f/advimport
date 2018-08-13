@@ -7,7 +7,7 @@ setup(
     author = "davix3f",
     author_email = "davide_fiorito@libero.it",
     version = "0.1",
-    packages = find_packages();
+    packages = find_packages(),
     license = "GNU GPL v3",
     include_package_data = False
 )
