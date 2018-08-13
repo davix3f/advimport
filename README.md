@@ -2,23 +2,12 @@
 
 ## What is that
 
-**advimport** is an alternative Python module import utility.
+The **dev** branch of advimport.
 
-It handles missing modules and other things automatically.
+Check the [main README](../master/README.md) to know more
 
-## How do I use that
-```
-import advimport
+## How do I use it
 
-advimport.import(module)
-# same as doing 'import module'
+I said, check the [main README](../master/README.md) to know more
 
-advimport.import(module, subfunction1, subfunction2
-# same as doing 'from main_module import subfunction2, subfunction2'
-```
-
-## Notes
-This import helper sticks to PEP8, so it won't support:
-* wildcard imports like `from module import *`
-* multiple inline imports like `from module import this, that, those`
-If you want to do those things, you'll have to use the built-in `import`
+** This README will self destruct in 3,2,1,0.5...**
