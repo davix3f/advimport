@@ -82,4 +82,4 @@ Open a pull request 📥
 ## Contact info
 📧 [davide_fiorito@libero.it](mailto:davide_fiorito@libero.it)
 
-📲 [Telegram contact]("t.me/pecciolino")
+📲 [Telegram contact](https://t.me/pecciolino)
