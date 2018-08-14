@@ -1,7 +1,12 @@
 from os import system as shell
+from os import path
+import sys
 import re
+
+sys.path.insert(0, path.abspath(path.join(path.dirname(__file__), '.')))
+
 from __pipfix_f__ import pipfix_f
-from sys import version_info
+
 
 __main_globals__ = None
 

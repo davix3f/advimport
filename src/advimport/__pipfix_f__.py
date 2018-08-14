@@ -2,6 +2,7 @@ import subprocess
 import re
 from sys import version_info
 
+
 def pipfix_f(module, askconfirm=True, automate_install=True):
 
     search_res = str(subprocess.run(['pip', 'search', module], stdout=subprocess.PIPE).stdout.decode('utf-8'))
