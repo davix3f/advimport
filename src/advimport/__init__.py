@@ -24,19 +24,20 @@ def advimport(main_module, *other_modules, name=None, pipfix=False, log=False):
         import_commands = []
         for item in other_modules:
             if type(item) is str:
-                import_commands.append("".join(("from ", main_module, " import ", item)))
+                import_commands.append((main_module, item, item))
             elif type(item) is dict:
                 for element in item:
-                    import_commands.append("".join(("from ", main_module, " import ", element, " as ", item[element])))
+                    import_commands.append((main_module, element, item[element]))
         try:
             for item in import_commands:
-                exec(item)
+                globals()[item[2]] = getattr(__import__(item[0]), item[1])
                 if log:
-                    print("\'"+item+"\'", "executed successfully")
-        except ImportError as ERROR:
-            if "cannot import name" in ERROR.args[0]:
-                print("AdvancedImportError:",re.search(r"name (?P<missing_submodule>\'\w+\')", ERROR.args[0]).group("missing_submodule"),\
+                    print("Imported", item[1], "from", item[0], "as", item[2])
+        except AttributeError as ERROR:
+            if "has no attribute" in ERROR.args[0]:
+                print("AdvancedImportError:",re.search(r"attribute (?P<missing_submodule>\'\w+\')", ERROR.args[0]).group("missing_submodule"),\
                 "is not a member of", main_module)
+        except ImportError as ERROR:
             if "module named" in ERROR.args[0]:
                 print("AdvancedImportError:",re.search(r"named (?P<missing_module>\'\w+\')", ERROR.args[0]).group("missing_module"),\
                 "does not exists or it is not installed")
@@ -50,7 +51,7 @@ def advimport(main_module, *other_modules, name=None, pipfix=False, log=False):
 
     elif len(other_modules) is 0:
         try:
-            exec("import "+ main_module + (" as " + name if name is not None else ""))
+            globals()[main_module if name==None else name] = __import__(main_module)
         except ImportError as ERROR:
             print("AdvancedImportError:",re.search(r"named (?P<missing_module>\'\w+\')", ERROR.args[0]).group("missing_module"),\
             "does not exists or it is not installed")
