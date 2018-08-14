@@ -6,7 +6,7 @@ setup(
     url = "https://github.com/davix3f/advimport",
     author = "davix3f",
     author_email = "davide_fiorito@libero.it",
-    version = "0.4",
+    version = "0.5",
     description = "Better and easier imports",
     packages = find_packages(),
     license = "GNU GPL v3",
