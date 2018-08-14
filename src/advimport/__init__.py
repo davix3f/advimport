@@ -1,5 +1,6 @@
 from os import system as shell
 import re
+from __pipfix_f__ import pipfix_f
 from sys import version_info
 
 __main_globals__ = None
@@ -14,6 +15,18 @@ def advimport_init(main_globals_arg):
 
 def advimport(main_module, *other_modules, name=None, pipfix=False, log=False):
 
+    def pipfix_caller(module_target=main_module, values=pipfix):
+        if type(values) in (list, tuple):
+            try:
+                #print("Calling pipfix_f with askconfirm", pipfix[0], "and automateinstall", pipfix[1])
+                pipfix_f(module=module_target,
+                         askconfirm=pipfix[0],
+                         automate_install=pipfix[1])
+            except:
+                #print("Calling pipfix_f with askconfirm", pipfix[0])
+                pipfix_f(module=module_target,
+                         askconfirm=pipfix[0])
+
     if __main_globals__ is None:
         raise ValueError("advimport not initiated. \
                          Run advimport_init(globals()) first")
@@ -26,27 +39,17 @@ def advimport(main_module, *other_modules, name=None, pipfix=False, log=False):
         raise ValueError("\'log\' must be bool or int(1/0)")
 
     if type(pipfix) is not bool:
-        if type(pipfix) is tuple:
+        if type(pipfix) in (tuple, list):
             if len(pipfix) > 2:
                 raise ValueError("When pipfix is a tuple, it must contain\
-                                 only two variable of type <bool>, or 1/0")
-            if (type(pipfix[0]) not in (bool, int)) or (type(pipfix[1]) not in (bool, int)):
+                                 maximum two variables of type <bool> or <int>")
+            if any(type(item) not in (bool,int) for item in pipfix):
                 raise ValueError("When pipfix is a tuple, it must contain\
-                                 only two variable of type <bool>")
+                                 maximum two variable of type <bool> or <int>")
         else:
-            raise ValueError("pipfix must be <bool> or <tuple>(<bool>/1/0,<bool>/1/0)")
+            raise ValueError("pipfix must be <bool> or <tuple>|<list>(<bool>/<int>,<bool>/<int>)")
 
 # Function to install missing modules using pip[pyversion being used]
-
-    def pipfix_f(module=main_module, askconfirm=True):
-        print("Trying to install", module, "using pip" + str(version_info[0]))
-        if askconfirm:
-            if input("Proceed? y/n: ") == "y":
-                pass
-            else:
-                print("Aborted")
-                return 1
-        shell("pip" + str(version_info[0]) + " install --user " + module)
 
 # Import submodules from main_module, with name assignments
 
@@ -81,11 +84,12 @@ def advimport(main_module, *other_modules, name=None, pipfix=False, log=False):
                                 ERROR.args[0]).group("missing_module"),
                       "does not exists or it is not installed")
                 if pipfix:
-                    if type(pipfix) is tuple and len(pipfix) is 2:
-                        pipfix_f(askconfirm=pipfix[1])
+                    if type(pipfix) is tuple:
+                        pipfix_caller()
                         # use pipfix argument #1 as askconfirm value
+                        #                     #2 as automateinstall value
                     else:
-                        pipfix_f()
+                        pipfix_f(main_module)
                         # run pipfix_f normally, askconfirm=True
 
 # Import just main_module
@@ -95,13 +99,15 @@ def advimport(main_module, *other_modules, name=None, pipfix=False, log=False):
             __main_globals__[main_module if name==None else name] = __import__(main_module)
         except ImportError as ERROR:
             print("AdvancedImportError:",
-                  re.search(r"named (?P<missing_module>\'\w+\')",
+                  re.search(r"named (?P<missing_module>\'.+\')",
                             ERROR.args[0]).group("missing_module"),
                   "does not exists or it is not installed")
             if pipfix:
-                if type(pipfix) is tuple and len(pipfix) is 2:
-                    pipfix_f(askconfirm=pipfix[1])
+                if type(pipfix) is tuple:
+                    pipfix_caller()
+                    # use pipfix argument #1 as askconfirm value
+                    #                     #2 as automateinstall value
                 else:
-                    pipfix_f()
+                    pipfix_f(main_module)
     else:
         raise ValueError("Invalid syntax")
