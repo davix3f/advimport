@@ -19,8 +19,9 @@ def advimport(main_module, *other_modules, name=None, pipfix=False, log=False):
                          Run advimport_init(globals()) first")
     if type(__main_globals__) is not dict:
         raise ValueError("Pass a variable of type <dict> to advimport_init()")
-    if type(name) is not str:
-        raise ValueError("\'name\' must be a string")
+    if name is not None:
+        if type(name) is not str:
+            raise ValueError("\'name\' must be a string")
     if type(log) not in (bool, int):
         raise ValueError("\'log\' must be bool or int(1/0)")
 
