@@ -88,8 +88,3 @@ Open an issue 🆘
 
 ## I fixed something or I'd like to contribute
 Open a pull request 📥
-
-## Contact info
-📧 [davide_fiorito@libero.it](mailto:davide_fiorito@libero.it)
-
-📲 [Telegram contact](https://t.me/pecciolino)
